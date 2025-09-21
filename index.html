@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staj Fotoğrafları</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- Navigation -->
+  <nav class="bg-white shadow-lg">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center">
+        </div>
+        
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex space-x-8">
+
+        </div>
+        
+        <!-- Mobile Menu Button -->
+        <div class="md:hidden">
+          <button id="mobile-menu-btn" class="text-gray-800 hover:text-blue-600 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="md:hidden hidden">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <div class="text-center py-8 px-4">
+    <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Alperen Sönmez Staj Günlüğü</h1>
+    <div class="text-lg font-semibold text-gray-600 mb-8">7 Temmuz - 4 Ağustos 2025</div>
+  </div>
+
+  <!-- Content Section -->
+  <div class="max-w-6xl mx-auto px-4 py-8">
+  </div>
+
+  <!-- Gallery -->
+  <div id="gallery" class="max-w-6xl mx-auto px-4 py-8">
+    <h2 class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-8">Staj Fotoğrafları</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="photo-gallery">
+      <!-- Photos will be loaded here by JavaScript -->
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="photo-modal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center p-4">
+    <div class="relative max-w-4xl max-h-full">
+      <button id="close-modal" class="absolute top-4 right-4 text-white hover:text-gray-300 z-10">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      <img id="modal-image" src="" alt="" class="max-w-full max-h-screen object-contain rounded-lg">
+      <div class="absolute bottom-4 left-4 bg-black bg-opacity-50 text-white px-3 py-2 rounded">
+        <span id="modal-caption"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white text-center py-6 mt-12">
+    <p>&copy; 2025 Tüm hakları saklıdır.</p>
+  </footer>
+
+  <script>
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Modal functionality
+    const modal = document.getElementById('photo-modal');
+    const modalImage = document.getElementById('modal-image');
+    const modalCaption = document.getElementById('modal-caption');
+    const closeModal = document.getElementById('close-modal');
+    
+    function openModal(src, alt) {
+      modalImage.src = src;
+      modalImage.alt = alt;
+      modalCaption.textContent = alt;
+      modal.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+    
+    function closeModalHandler() {
+      modal.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+    
+    closeModal.addEventListener('click', closeModalHandler);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModalHandler();
+      }
+    });
+    
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModalHandler();
+      }
+    });
+
+    // Photo gallery
+    const gallery = document.getElementById("photo-gallery");
+
+    // Gruplar ve maksimum numaraları
+    const groups = {
+      a: 8,   // a_staj_foto (1-8)
+      b: 48,  // b_staj_foto (1-48)
+      c: 13   // c_staj_foto (1-13)
+    };
+
+    // Fotoğrafları sırayla ekle
+    for (let group of Object.keys(groups)) {
+      for (let i = 1; i <= groups[group]; i++) {
+        const div = document.createElement("div");
+        div.className = "overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition duration-300 cursor-pointer";
+        
+        const img = document.createElement("img");
+        img.src = `images/${group}_staj_foto (${i}).jpg`;
+        img.alt = `${group.toUpperCase()} Staj Foto ${i}`;
+        img.className = "w-full h-100 sm:h-56 md:h-64 lg:h-72 object-cover hover:scale-105 transition duration-300";
+        
+        div.addEventListener('click', () => {
+          openModal(img.src, img.alt);
+        });
+        
+        div.appendChild(img);
+        gallery.appendChild(div);
+      }
+    }
+  </script>
+</body>
+</html>
